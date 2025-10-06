@@ -1,12 +1,14 @@
 package es.carlosgs.tarjetas.tarjetas.repositories;
 
 import es.carlosgs.tarjetas.tarjetas.models.Tarjeta;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Slf4j
 @Repository
 public class TarjetasRepositoryImpl implements TarjetasRepository {
 
@@ -23,19 +25,39 @@ public class TarjetasRepositoryImpl implements TarjetasRepository {
 
     @Override
     public List<Tarjeta> findAll() {
+        log.info("Buscando tarjetas");
         return tarjetas.values().stream()
                 .toList();
     }
 
     @Override
     public List<Tarjeta> findAllByNumero(String numero) {
+        log.info("Buscando tarjetas por numero: " + numero);
         return tarjetas.values().stream()
                 .filter(tarjeta -> tarjeta.getNumero().toLowerCase().contains(numero.toLowerCase()))
                 .toList();
     }
 
     @Override
+    public List<Tarjeta> findAllByTitular(String titular) {
+        log.info("Buscando tarjetas por titular: " + titular);
+        return tarjetas.values().stream()
+                .filter(tarjeta -> tarjeta.getTitular().toLowerCase().contains(titular.toLowerCase()))
+                .toList();
+    }
+
+    @Override
+    public List<Tarjeta> findAllByNumeroAndTitular(String numero, String titular) {
+        log.info("Buscando tarjetas por numero: {} y titular: {} ", numero, titular);
+        return tarjetas.values().stream()
+                .filter(tarjeta -> tarjeta.getNumero().toLowerCase().contains(numero.toLowerCase()))
+                .filter(tarjeta -> tarjeta.getTitular().toLowerCase().contains(titular.toLowerCase()))
+                .toList();
+    }
+
+    @Override
     public Optional<Tarjeta> findById(Long id) {
+        log.info("Buscando tarjetas por id: " + id);
         return tarjetas.get(id) != null ? Optional.of(tarjetas.get(id)) : Optional.empty();
     }
 }

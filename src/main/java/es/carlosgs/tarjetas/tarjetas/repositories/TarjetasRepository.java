@@ -11,6 +11,9 @@ public interface TarjetasRepository {
 
     List<Tarjeta> findAllByNumero(String numero);
 
+    List<Tarjeta> findAllByTitular(String titular);
+    List<Tarjeta> findAllByNumeroAndTitular(String numero, String titular);
+
 
     Optional<Tarjeta> findById(Long id);
 /*

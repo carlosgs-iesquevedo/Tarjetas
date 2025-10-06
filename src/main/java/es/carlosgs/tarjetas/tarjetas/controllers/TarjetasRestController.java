@@ -1,7 +1,7 @@
 package es.carlosgs.tarjetas.tarjetas.controllers;
 
 import es.carlosgs.tarjetas.tarjetas.models.Tarjeta;
-import es.carlosgs.tarjetas.tarjetas.repositories.TarjetasRepository;
+import es.carlosgs.tarjetas.tarjetas.services.TarjetasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,40 +15,32 @@ import java.util.Optional;
 public class TarjetasRestController {
 
     // Repositorio de tarjetas
-    private final TarjetasRepository tarjetasRepository;
+    private final TarjetasService tarjetasService;
 
     @Autowired
-    public TarjetasRestController(TarjetasRepository tarjetasRepository) {
-        this.tarjetasRepository = tarjetasRepository;
+    public TarjetasRestController(TarjetasService tarjetasService) {
+        this.tarjetasService = tarjetasService;
     }
 
     @GetMapping()
     public ResponseEntity<List<Tarjeta>> getAllTarjetas(@RequestParam(required = false) String numero) {
         if (numero != null) {
-            return ResponseEntity.ok(tarjetasRepository.findAllByNumero(numero));
+            return ResponseEntity.ok(tarjetasService.findAll(numero, null));
         } else {
             //return ResponseEntity.ok(tarjetasRepository.findAll());
-            return ResponseEntity.status(HttpStatus.OK).body(tarjetasRepository.findAll());
+            return ResponseEntity.status(HttpStatus.OK).body(tarjetasService.findAll(null, null));
         }
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Tarjeta> getTarjetaById(@PathVariable Long id) {
-        // Estilo estructurado
-        /*
-        Optional<Tarjeta> tarjeta = tarjetasRepository.findById(id);
-        if (tarjeta.isPresent()) {
-            return ResponseEntity.ok(tarjeta.get());
-        }  else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-         */
 
-        // Estilo funcional
-        return tarjetasRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(tarjetasService.findById(id));
+
     }
+
+
 
 
 }
