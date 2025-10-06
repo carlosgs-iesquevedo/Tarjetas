@@ -1,5 +1,6 @@
 package es.carlosgs.tarjetas.tarjetas.services;
 
+import es.carlosgs.tarjetas.exceptions.TarjetaNotFoundException;
 import es.carlosgs.tarjetas.tarjetas.models.Tarjeta;
 import es.carlosgs.tarjetas.tarjetas.repositories.TarjetasRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 
 @Slf4j
 @Service
@@ -30,7 +32,7 @@ public class TarjetasServiceImpl implements TarjetasService {
             log.info("Buscando tarjetas por numero: " + numero);
             return tarjetasRepository.findAllByNumero(numero);
         }
-        // Si el numero está vací, pero el titular no, buscamos por titular
+        // Si el numero está vacío, pero el titular no, buscamos por titular
         if (numero == null || numero.isEmpty()) {
             log.info("Buscando tarjetas por titular: " + titular);
             return tarjetasRepository.findAllByTitular(titular);
@@ -42,7 +44,19 @@ public class TarjetasServiceImpl implements TarjetasService {
 
     @Override
     public Tarjeta findById(Long id) {
-        return tarjetasRepository.findById(id).orElse(null);
+        log.info("Buscando tarjeta por id {}", id);
+        /*
+        // Estilo estructurado
+        Optional<Tarjeta> tarjetaEncontrada = tarjetasRepository.findById(id);
+        if (tarjetaEncontrada.isPresent()) {
+            return tarjetaEncontrada.get();
+        } else {
+            throw new TarjetaNotFoundException(id);
+        }
+
+         */
+        // estilo funcional
+        return tarjetasRepository.findById(id).orElseThrow(()-> new TarjetaNotFoundException(id));
     }
 
 }

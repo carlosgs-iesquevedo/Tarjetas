@@ -8,5 +8,14 @@ GET http://localhost:3000/api/v1/tarjetas
 ### getTarjetasAll
 GET http://localhost:3000/api/v1/tarjetas?numero=1234-5678-1234-5678
 
+### getTarjetasAll
+GET http://localhost:3000/api/v1/tarjetas?numero=1234-5678-1234-5678&titular=Juan
+
+### getTarjetasAll
+GET http://localhost:3000/api/v1/tarjetas?titular=Juan
+
 ### gatTarjetaById
 GET http://localhost:3000/api/v1/tarjetas/1
+
+### gatTarjetaById (una que no existe)
+GET http://localhost:3000/api/v1/tarjetas/3
