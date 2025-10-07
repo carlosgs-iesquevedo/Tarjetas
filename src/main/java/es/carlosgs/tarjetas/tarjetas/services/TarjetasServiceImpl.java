@@ -5,11 +5,14 @@ import es.carlosgs.tarjetas.tarjetas.models.Tarjeta;
 import es.carlosgs.tarjetas.tarjetas.repositories.TarjetasRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
+@CacheConfig(cacheNames = {"tarjetas"})
 @Slf4j
 @Service
 public class TarjetasServiceImpl implements TarjetasService {
@@ -43,6 +46,7 @@ public class TarjetasServiceImpl implements TarjetasService {
     }
 
     @Override
+    @Cacheable
     public Tarjeta findById(Long id) {
         log.info("Buscando tarjeta por id {}", id);
         /*
