@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Slf4j
 @RequestMapping("api/${api.version}/tarjetas")
@@ -40,22 +40,30 @@ public class TarjetasRestController {
 
     }
 
-    /*
-    //Sin anotación @ResponseStatus(HttpStatus.NOT_FOUND) habría que hacer esto
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Tarjeta> getTarjetaById(@PathVariable Long id) {
-        log.info("Buscando tarjeta por id {}", id);
-        try {
-            Tarjeta t = tarjetasService.findById(id);
-            return ResponseEntity.ok(t);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-
+    @PostMapping()
+    public ResponseEntity<Tarjeta> create(@RequestBody Tarjeta tarjeta) {
+        var saved = tarjetasService.save(tarjeta);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-     */
+    @PutMapping("/{id}")
+    public ResponseEntity<Tarjeta> update(@PathVariable Long id, @RequestBody Tarjeta tarjeta) {
+        log.info("Actualizando tarjeta id={} con tarjeta={}", id, tarjeta);
+        return ResponseEntity.ok(tarjetasService.update(id, tarjeta));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Tarjeta> updatePartial(@PathVariable Long id, @RequestBody Tarjeta tarjeta) {
+        log.info("Actualizando parcialmente tarjeta con id={} con tarjeta={}",id, tarjeta);
+        return ResponseEntity.ok(tarjetasService.update(id, tarjeta));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        log.info("Borrando producto por id: " + id);
+        tarjetasService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 
 

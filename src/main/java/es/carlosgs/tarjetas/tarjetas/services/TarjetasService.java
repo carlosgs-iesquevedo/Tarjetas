@@ -9,15 +9,13 @@ public interface TarjetasService {
     List<Tarjeta> findAll(String numero, String titular);
 
     Tarjeta findById(Long id);
-    /*
-        Tarjeta findbyUuid(String uuid);
 
-        Tarjeta save(TarjetaCreateDto productoCreateDto);
+    Tarjeta findbyUuid(String uuid);
 
-        Tarjeta update(Long id, TarjetaUpdateDto productoUpdateDto);
+    Tarjeta save(Tarjeta tarjeta);
+
+    Tarjeta update(Long id, Tarjeta tarjeta);
 
     void deleteById(Long id);
-
-     */
 
 }
