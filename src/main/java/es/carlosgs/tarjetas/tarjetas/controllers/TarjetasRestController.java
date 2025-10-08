@@ -42,6 +42,7 @@ public class TarjetasRestController {
 
     @PostMapping()
     public ResponseEntity<Tarjeta> create(@RequestBody Tarjeta tarjeta) {
+        log.info("Creando tarjeta : {}", tarjeta);
         var saved = tarjetasService.save(tarjeta);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
@@ -60,7 +61,7 @@ public class TarjetasRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        log.info("Borrando producto por id: " + id);
+        log.info("Borrando tarjeta por id: " + id);
         tarjetasService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

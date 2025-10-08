@@ -6,6 +6,7 @@ import es.carlosgs.tarjetas.tarjetas.repositories.TarjetasRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -99,6 +100,7 @@ public class TarjetasServiceImpl implements TarjetasService {
     }
 
     @Override
+    @CachePut
     public Tarjeta update(Long id, Tarjeta tarjeta) {
         log.info("Actualizando tarjeta por id: " + id);
         var tarjetaActual = this.findById(id);
@@ -119,6 +121,7 @@ public class TarjetasServiceImpl implements TarjetasService {
     }
 
     @Override
+    @CacheEvict
     public void deleteById(Long id) {
         log.debug("Borrando tarjeta por id: " + id);
         var tarjetaEncontrada = this.findById(id);
