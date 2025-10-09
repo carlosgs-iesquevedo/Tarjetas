@@ -1,4 +1,4 @@
-package es.carlosgs.tarjetas.exceptions;
+package es.carlosgs.tarjetas.tarjetas.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

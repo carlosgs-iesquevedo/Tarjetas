@@ -1,5 +1,8 @@
 package es.carlosgs.tarjetas.tarjetas.controllers;
 
+import es.carlosgs.tarjetas.tarjetas.dto.TarjetaCreateDto;
+import es.carlosgs.tarjetas.tarjetas.dto.TarjetaResponseDto;
+import es.carlosgs.tarjetas.tarjetas.dto.TarjetaUpdateDto;
 import es.carlosgs.tarjetas.tarjetas.models.Tarjeta;
 import es.carlosgs.tarjetas.tarjetas.services.TarjetasService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,22 +44,22 @@ public class TarjetasRestController {
     }
 
     @PostMapping()
-    public ResponseEntity<Tarjeta> create(@RequestBody Tarjeta tarjeta) {
-        log.info("Creando tarjeta : {}", tarjeta);
-        var saved = tarjetasService.save(tarjeta);
+    public ResponseEntity<TarjetaResponseDto> create(@RequestBody TarjetaCreateDto tarjetaCreateDto) {
+        log.info("Creando tarjeta : {}", tarjetaCreateDto);
+        var saved = tarjetasService.save(tarjetaCreateDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tarjeta> update(@PathVariable Long id, @RequestBody Tarjeta tarjeta) {
-        log.info("Actualizando tarjeta id={} con tarjeta={}", id, tarjeta);
-        return ResponseEntity.ok(tarjetasService.update(id, tarjeta));
+    public ResponseEntity<Tarjeta> update(@PathVariable Long id, @RequestBody TarjetaUpdateDto tarjetaUpdateDto) {
+        log.info("Actualizando tarjeta id={} con tarjeta={}", id, tarjetaUpdateDto);
+        return ResponseEntity.ok(tarjetasService.update(id, tarjetaUpdateDto));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Tarjeta> updatePartial(@PathVariable Long id, @RequestBody Tarjeta tarjeta) {
-        log.info("Actualizando parcialmente tarjeta con id={} con tarjeta={}",id, tarjeta);
-        return ResponseEntity.ok(tarjetasService.update(id, tarjeta));
+    public ResponseEntity<Tarjeta> updatePartial(@PathVariable Long id, @RequestBody TarjetaUpdateDto tarjetaUpdateDto) {
+        log.info("Actualizando parcialmente tarjeta con id={} con tarjeta={}",id, tarjetaUpdateDto);
+        return ResponseEntity.ok(tarjetasService.update(id, tarjetaUpdateDto));
     }
 
     @DeleteMapping("/{id}")

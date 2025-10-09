@@ -1,5 +1,8 @@
 package es.carlosgs.tarjetas.tarjetas.services;
 
+import es.carlosgs.tarjetas.tarjetas.dto.TarjetaCreateDto;
+import es.carlosgs.tarjetas.tarjetas.dto.TarjetaResponseDto;
+import es.carlosgs.tarjetas.tarjetas.dto.TarjetaUpdateDto;
 import es.carlosgs.tarjetas.tarjetas.models.Tarjeta;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -12,9 +15,9 @@ public interface TarjetasService {
 
     Tarjeta findbyUuid(String uuid);
 
-    Tarjeta save(Tarjeta tarjeta);
+    TarjetaResponseDto save(TarjetaCreateDto tarjetaCreateDto);
 
-    Tarjeta update(Long id, Tarjeta tarjeta);
+    Tarjeta update(Long id, TarjetaUpdateDto tarjetaUpdateDto);
 
     void deleteById(Long id);
 

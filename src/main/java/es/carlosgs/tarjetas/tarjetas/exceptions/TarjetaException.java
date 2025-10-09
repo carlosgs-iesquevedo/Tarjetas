@@ -1,4 +1,4 @@
-package es.carlosgs.tarjetas.exceptions;
+package es.carlosgs.tarjetas.tarjetas.exceptions;
 
 
 public abstract class TarjetaException extends RuntimeException {
