@@ -86,7 +86,7 @@ class TarjetasServiceImplTest {
         List<TarjetaResponseDto> expectedTarjetaResponses =
                 Arrays.asList(tarjetaResponse1, tarjetaResponse2);
         when(tarjetasRepository.findAll()).thenReturn(expectedTarjetas);
-        when(tarjetaMapper.toResponseDtoList(anyList())).thenReturn(expectedTarjetaResponses);
+        when(tarjetaMapper.toTarjetaResponseDto(anyList())).thenReturn(expectedTarjetaResponses);
 
         // Act
         List<TarjetaResponseDto> actualTarjetaResponses = tarjetasService.findAll(null, null);
@@ -96,20 +96,43 @@ class TarjetasServiceImplTest {
 
         // Verify
         verify(tarjetasRepository, times(1)).findAll();
-        verify(tarjetaMapper, times(1)).toResponseDtoList(anyList());
+        verify(tarjetaMapper, times(1)).toTarjetaResponseDto(anyList());
 
     }
 
     @Test
     void findAll_ShouldReturnTarjetasByNumero_WhenNumeroParameterProvided() {
+        // Arrange
+        String numero = "1234-5678-1234-5678";
+        List<Tarjeta> expectedTarjetas = List.of(tarjeta1);
+        List<TarjetaResponseDto> expectedTarjetaResponses = List.of(tarjetaResponse1);
+        when(tarjetasRepository.findAllByNumero(numero)).thenReturn(expectedTarjetas);
+        when(tarjetaMapper.toTarjetaResponseDto(anyList())).thenReturn(expectedTarjetaResponses);
 
+        // Act
+        List<TarjetaResponseDto> actualTarjetaResponses = tarjetasService.findAll(numero, null);
+
+        // Assert
+        assertIterableEquals(expectedTarjetaResponses, actualTarjetaResponses);
+
+        // Verify
+        verify(tarjetasRepository, times(1)).findAllByNumero(numero);
+        verify(tarjetaMapper, times(1)).toTarjetaResponseDto(anyList());
+
+    }
+
+
+    @Test
+    void findAll_ShouldReturnTarjetasByTitular_WhenTitularParameterProvided() {
 
 
     }
 
     @Test
-    void findById() {
+    void findAll_ShouldReturnTarjetasByNumeroAndTitular_WhenBothParametersProvided() {
+
     }
+
 
     @Test
     void findbyUuid() {

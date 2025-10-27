@@ -33,21 +33,21 @@ public class TarjetasServiceImpl implements TarjetasService {
         // Si todo está vacío o nulo, devolvemos todas las tarjetas
         if ((numero == null || numero.isEmpty()) && (titular == null || titular.isEmpty())) {
             log.info("Buscando todas las tarjetas");
-            return tarjetaMapper.toResponseDtoList(tarjetasRepository.findAll());
+            return tarjetaMapper.toTarjetaResponseDto(tarjetasRepository.findAll());
         }
         // Si el numero no está vacío, pero el titular si, buscamos por numero
         if ((numero != null && !numero.isEmpty()) && (titular == null || titular.isEmpty())) {
             log.info("Buscando tarjetas por numero: {}", numero);
-            return tarjetaMapper.toResponseDtoList(tarjetasRepository.findAllByNumero(numero));
+            return tarjetaMapper.toTarjetaResponseDto(tarjetasRepository.findAllByNumero(numero));
         }
         // Si el numero está vacío, pero el titular no, buscamos por titular
         if (numero == null || numero.isEmpty()) {
             log.info("Buscando tarjetas por titular: {}", titular);
-            return tarjetaMapper.toResponseDtoList(tarjetasRepository.findAllByTitular(titular));
+            return tarjetaMapper.toTarjetaResponseDto(tarjetasRepository.findAllByTitular(titular));
         }
         // Si el numero y el titular no están vacíos, buscamos por ambos
         log.info("Buscando tarjetas por numero: {} y titular: {}", numero, titular);
-        return tarjetaMapper.toResponseDtoList(tarjetasRepository.findAllByNumeroAndTitular(numero, titular));
+        return tarjetaMapper.toTarjetaResponseDto(tarjetasRepository.findAllByNumeroAndTitular(numero, titular));
     }
 
     @Override

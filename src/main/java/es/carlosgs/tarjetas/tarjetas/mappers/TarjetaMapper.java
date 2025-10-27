@@ -56,7 +56,7 @@ public class TarjetaMapper {
     }
 
     // Mapeamos de modelo a DTO (lista)
-    public List<TarjetaResponseDto> toResponseDtoList(List<Tarjeta> tarjetas) {
+    public List<TarjetaResponseDto> toTarjetaResponseDto(List<Tarjeta> tarjetas) {
         return tarjetas.stream()
                 .map(this::toTarjetaResponseDto)
                 .toList();
