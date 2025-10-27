@@ -32,7 +32,7 @@ public class TarjetasRestController {
     private final TarjetasService tarjetasService;
 
     @GetMapping()
-    public ResponseEntity<List<Tarjeta>> getAllTarjetas(@RequestParam(required = false) String numero,
+    public ResponseEntity<List<TarjetaResponseDto>> getAllTarjetas(@RequestParam(required = false) String numero,
                                                         @RequestParam(required = false) String titular) {
         log.info("Buscando tarjetas por numero={}, titular={}", numero, titular);
         return ResponseEntity.ok(tarjetasService.findAll(numero, titular));

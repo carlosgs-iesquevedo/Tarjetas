@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 public interface TarjetasService {
-    List<Tarjeta> findAll(String numero, String titular);
+    List<TarjetaResponseDto> findAll(String numero, String titular);
 
     Tarjeta findById(Long id);
 

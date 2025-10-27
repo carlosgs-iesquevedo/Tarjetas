@@ -104,8 +104,9 @@ class TarjetasRepositoryImplTest {
 
     @Test
     void findById_existingId_returnsOptionalWithTarjeta() {
-        // Act
+        // Arrange
         Long id = 1L;
+        // Act
         Optional<Tarjeta> optionalTarjeta = repositorio.findById(id);
 
         // Assert

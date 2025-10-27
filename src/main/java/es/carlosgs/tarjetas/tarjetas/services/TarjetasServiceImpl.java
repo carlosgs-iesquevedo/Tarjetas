@@ -29,25 +29,25 @@ public class TarjetasServiceImpl implements TarjetasService {
 
 
     @Override
-    public List<Tarjeta> findAll(String numero, String titular) {
+    public List<TarjetaResponseDto> findAll(String numero, String titular) {
         // Si todo está vacío o nulo, devolvemos todas las tarjetas
         if ((numero == null || numero.isEmpty()) && (titular == null || titular.isEmpty())) {
             log.info("Buscando todas las tarjetas");
-            return tarjetasRepository.findAll();
+            return tarjetaMapper.toResponseDtoList(tarjetasRepository.findAll());
         }
         // Si el numero no está vacío, pero el titular si, buscamos por numero
         if ((numero != null && !numero.isEmpty()) && (titular == null || titular.isEmpty())) {
-            log.info("Buscando tarjetas por numero: " + numero);
-            return tarjetasRepository.findAllByNumero(numero);
+            log.info("Buscando tarjetas por numero: {}", numero);
+            return tarjetaMapper.toResponseDtoList(tarjetasRepository.findAllByNumero(numero));
         }
         // Si el numero está vacío, pero el titular no, buscamos por titular
         if (numero == null || numero.isEmpty()) {
-            log.info("Buscando tarjetas por titular: " + titular);
-            return tarjetasRepository.findAllByTitular(titular);
+            log.info("Buscando tarjetas por titular: {}", titular);
+            return tarjetaMapper.toResponseDtoList(tarjetasRepository.findAllByTitular(titular));
         }
         // Si el numero y el titular no están vacíos, buscamos por ambos
-        log.info("Buscando tarjetas por numero: " + numero + " y titular: " + titular);
-        return tarjetasRepository.findAllByNumeroAndTitular(numero, titular);
+        log.info("Buscando tarjetas por numero: {} y titular: {}", numero, titular);
+        return tarjetaMapper.toResponseDtoList(tarjetasRepository.findAllByNumeroAndTitular(numero, titular));
     }
 
     @Override

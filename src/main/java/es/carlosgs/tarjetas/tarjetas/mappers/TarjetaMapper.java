@@ -7,6 +7,7 @@ import es.carlosgs.tarjetas.tarjetas.models.Tarjeta;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -52,6 +53,13 @@ public class TarjetaMapper {
                     .updatedAt(tarjeta.getUpdatedAt())
                     .uuid(tarjeta.getUuid())
                     .build();
+    }
+
+    // Mapeamos de modelo a DTO (lista)
+    public List<TarjetaResponseDto> toResponseDtoList(List<Tarjeta> tarjetas) {
+        return tarjetas.stream()
+                .map(this::toTarjetaResponseDto)
+                .toList();
     }
 
 }
