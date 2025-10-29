@@ -33,12 +33,7 @@ public class TarjetasServiceImpl implements TarjetasService {
         // Si todo está vacío o nulo, devolvemos todas las tarjetas
         if ((numero == null || numero.isEmpty()) && (titular == null || titular.isEmpty())) {
             log.info("Buscando todas las tarjetas");
-            List<TarjetaResponseDto> lista =  tarjetaMapper.toTarjetaResponseDto(tarjetasRepository.findAll());
-            for (TarjetaResponseDto tarjeta : lista){
-                tarjeta.setSaldo(tarjeta.getSaldo()-0.25);
-            }
-            log.info("Tarjetas encontradas {}", lista);
-            return lista;
+            return tarjetaMapper.toTarjetaResponseDto(tarjetasRepository.findAll());
         }
         // Si el numero no está vacío, pero el titular si, buscamos por numero
         if ((numero != null && !numero.isEmpty()) && (titular == null || titular.isEmpty())) {

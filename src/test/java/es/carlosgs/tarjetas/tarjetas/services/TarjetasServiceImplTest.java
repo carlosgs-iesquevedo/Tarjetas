@@ -92,10 +92,7 @@ class TarjetasServiceImplTest {
         List<TarjetaResponseDto> actualTarjetaResponses = tarjetasService.findAll(null, null);
 
         // Assert
-        //assertIterableEquals(expectedTarjetaResponses, actualTarjetaResponses);
-        assertAll(
-                () -> assertEquals(0.25, expectedTarjetaResponses.getFirst().getSaldo() - actualTarjetaResponses.getFirst().getSaldo())
-        );
+        assertIterableEquals(expectedTarjetaResponses, actualTarjetaResponses);
 
         // Verify
         verify(tarjetasRepository, times(1)).findAll();
