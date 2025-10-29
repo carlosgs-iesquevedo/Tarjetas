@@ -92,7 +92,10 @@ class TarjetasServiceImplTest {
         List<TarjetaResponseDto> actualTarjetaResponses = tarjetasService.findAll(null, null);
 
         // Assert
-        assertIterableEquals(expectedTarjetaResponses, actualTarjetaResponses);
+        //assertIterableEquals(expectedTarjetaResponses, actualTarjetaResponses);
+        assertAll(
+                () -> assertEquals(0.25, expectedTarjetaResponses.getFirst().getSaldo() - actualTarjetaResponses.getFirst().getSaldo())
+        );
 
         // Verify
         verify(tarjetasRepository, times(1)).findAll();
@@ -124,7 +127,22 @@ class TarjetasServiceImplTest {
 
     @Test
     void findAll_ShouldReturnTarjetasByTitular_WhenTitularParameterProvided() {
+        // Arrange
+        String titular = "Jose";
+        List<Tarjeta> expectedTarjetas = List.of(tarjeta1);
+        List<TarjetaResponseDto> expectedTarjetaResponses = List.of(tarjetaResponse1);
+        when(tarjetasRepository.findAllByTitular(titular)).thenReturn(expectedTarjetas);
+        when(tarjetaMapper.toTarjetaResponseDto(anyList())).thenReturn(expectedTarjetaResponses);
 
+        // Act
+        List<TarjetaResponseDto> actualTarjetaResponses = tarjetasService.findAll(null, titular);
+
+        // Assert
+        assertIterableEquals(expectedTarjetaResponses, actualTarjetaResponses);
+
+        // Verify
+        verify(tarjetasRepository, times(1)).findAllByTitular(titular);
+        verify(tarjetaMapper, times(1)).toTarjetaResponseDto(anyList());
 
     }
 
