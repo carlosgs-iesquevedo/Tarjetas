@@ -28,11 +28,10 @@ class TarjetaMapperTest {
                 .saldo(100.0)
                 .build();
         // Act
-        var res = tarjetaMapper.toTarjeta(id, tarjetaCreateDto);
+        var res = tarjetaMapper.toTarjeta(tarjetaCreateDto);
 
         // Assert
         assertAll(
-                () -> assertEquals(id, res.getId()),
                 () -> assertEquals(tarjetaCreateDto.getNumero(), res.getNumero()),
                 () -> assertEquals(tarjetaCreateDto.getCvc(), res.getCvc()),
                 () -> assertEquals(tarjetaCreateDto.getFechaCaducidad(), res.getFechaCaducidad()),

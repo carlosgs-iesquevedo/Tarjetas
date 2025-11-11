@@ -26,7 +26,7 @@ Content-Type: application/json
 
 {
   "numero": "2222-5678-1234-5678",
-  "cvc": "23s",
+  "cvc": "234",
   "fechaCaducidad": "2025-12-31",
   "titular": "María",
   "saldo": 300.0

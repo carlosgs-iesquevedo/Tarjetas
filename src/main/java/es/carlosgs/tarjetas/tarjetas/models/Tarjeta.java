@@ -1,25 +1,49 @@
 package es.carlosgs.tarjetas.tarjetas.models;
 
 
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
-@Data
+@ToString
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name ="TARJETAS")
 public class Tarjeta {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
-
+    @Column(nullable = false, length = 19)
     private  String numero;
+    @Column(nullable = false, length = 3)
     private  String cvc;
+    @Column(nullable = false)
     private  LocalDate fechaCaducidad;
+    @Column(nullable = false, length = 50)
     private  String titular;
+    @Column(nullable = false)
     private  Double saldo;
 
-    private  LocalDateTime createdAt;
-    private  LocalDateTime updatedAt;
-    private  UUID uuid;
+    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Builder.Default
+    private  LocalDateTime createdAt = LocalDateTime.now();
+    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @Builder.Default
+    private  LocalDateTime updatedAt  = LocalDateTime.now();
+    @Column(unique = true, updatable = false, nullable = false)
+    @Builder.Default
+    private  UUID uuid = UUID.randomUUID();
+
+    // nueva columna
+    @Column(columnDefinition = "boolean default false")
+    @Builder.Default
+    private Boolean isDeleted = false;
 }

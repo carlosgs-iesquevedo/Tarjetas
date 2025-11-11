@@ -4,12 +4,10 @@ import es.carlosgs.tarjetas.tarjetas.dto.TarjetaResponseDto;
 import es.carlosgs.tarjetas.tarjetas.mappers.TarjetaMapper;
 import es.carlosgs.tarjetas.tarjetas.models.Tarjeta;
 import es.carlosgs.tarjetas.tarjetas.repositories.TarjetasRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -48,29 +46,14 @@ class TarjetasServiceImplTest {
             .updatedAt(LocalDateTime.now())
             .uuid(UUID.fromString("b36835eb-e56a-4023-b058-52bfa600fee5"))
             .build();
+    private TarjetaResponseDto tarjetaResponse1;
 
-    private final TarjetaResponseDto tarjetaResponse1 = TarjetaResponseDto.builder()
-            .id(1L)
-            .numero("1234-5678-1234-5678")
-            .cvc("555")
-            .fechaCaducidad(LocalDate.of(2025,12,31))
-            .titular("Jose")
-            .saldo(100.0)
-            .build();
 
-    private final TarjetaResponseDto tarjetaResponse2 = TarjetaResponseDto.builder()
-            .id(2L)
-            .numero("4321-5678-1234-5678")
-            .cvc("555")
-            .fechaCaducidad(LocalDate.of(2025,12,31))
-            .titular("Juan")
-            .saldo(100.0)
-            .build();
 
     @Mock
     private TarjetasRepository tarjetasRepository;
 
-    @Mock
+    @Spy
     private TarjetaMapper tarjetaMapper;
 
     @InjectMocks
@@ -79,14 +62,18 @@ class TarjetasServiceImplTest {
     @Captor // Captor de argumentos
     private ArgumentCaptor<Tarjeta> tarjetaCaptor;
 
+    @BeforeEach
+    void setUp() {
+        tarjetaResponse1 = tarjetaMapper.toTarjetaResponseDto(tarjeta1);
+    }
+
     @Test
     void findAll_ShouldReturnAllTarjetas_WhenNoParametersProvided() {
         // Arrange
         List<Tarjeta> expectedTarjetas = Arrays.asList(tarjeta1, tarjeta2);
-        List<TarjetaResponseDto> expectedTarjetaResponses =
-                Arrays.asList(tarjetaResponse1, tarjetaResponse2);
+        List<TarjetaResponseDto> expectedTarjetaResponses = tarjetaMapper.toTarjetaResponseDto(expectedTarjetas);
         when(tarjetasRepository.findAll()).thenReturn(expectedTarjetas);
-        when(tarjetaMapper.toTarjetaResponseDto(anyList())).thenReturn(expectedTarjetaResponses);
+
 
         // Act
         List<TarjetaResponseDto> actualTarjetaResponses = tarjetasService.findAll(null, null);
@@ -96,7 +83,7 @@ class TarjetasServiceImplTest {
 
         // Verify
         verify(tarjetasRepository, times(1)).findAll();
-        verify(tarjetaMapper, times(1)).toTarjetaResponseDto(anyList());
+        verify(tarjetaMapper, times(2)).toTarjetaResponseDto(anyList());
 
     }
 
@@ -106,8 +93,8 @@ class TarjetasServiceImplTest {
         String numero = "1234-5678-1234-5678";
         List<Tarjeta> expectedTarjetas = List.of(tarjeta1);
         List<TarjetaResponseDto> expectedTarjetaResponses = List.of(tarjetaResponse1);
-        when(tarjetasRepository.findAllByNumero(numero)).thenReturn(expectedTarjetas);
-        when(tarjetaMapper.toTarjetaResponseDto(anyList())).thenReturn(expectedTarjetaResponses);
+        when(tarjetasRepository.findByNumero(numero)).thenReturn(expectedTarjetas);
+
 
         // Act
         List<TarjetaResponseDto> actualTarjetaResponses = tarjetasService.findAll(numero, null);
@@ -116,7 +103,7 @@ class TarjetasServiceImplTest {
         assertIterableEquals(expectedTarjetaResponses, actualTarjetaResponses);
 
         // Verify
-        verify(tarjetasRepository, times(1)).findAllByNumero(numero);
+        verify(tarjetasRepository, times(1)).findByNumero(numero);
         verify(tarjetaMapper, times(1)).toTarjetaResponseDto(anyList());
 
     }
@@ -128,8 +115,8 @@ class TarjetasServiceImplTest {
         String titular = "Jose";
         List<Tarjeta> expectedTarjetas = List.of(tarjeta1);
         List<TarjetaResponseDto> expectedTarjetaResponses = List.of(tarjetaResponse1);
-        when(tarjetasRepository.findAllByTitular(titular)).thenReturn(expectedTarjetas);
-        when(tarjetaMapper.toTarjetaResponseDto(anyList())).thenReturn(expectedTarjetaResponses);
+        when(tarjetasRepository.findByTitularContainsIgnoreCase(titular)).thenReturn(expectedTarjetas);
+
 
         // Act
         List<TarjetaResponseDto> actualTarjetaResponses = tarjetasService.findAll(null, titular);
@@ -138,7 +125,7 @@ class TarjetasServiceImplTest {
         assertIterableEquals(expectedTarjetaResponses, actualTarjetaResponses);
 
         // Verify
-        verify(tarjetasRepository, times(1)).findAllByTitular(titular);
+        verify(tarjetasRepository, times(1)).findByTitularContainsIgnoreCase(titular);
         verify(tarjetaMapper, times(1)).toTarjetaResponseDto(anyList());
 
     }

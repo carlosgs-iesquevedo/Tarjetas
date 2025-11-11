@@ -38,16 +38,16 @@ public class TarjetasServiceImpl implements TarjetasService {
         // Si el numero no está vacío, pero el titular si, buscamos por numero
         if ((numero != null && !numero.isEmpty()) && (titular == null || titular.isEmpty())) {
             log.info("Buscando tarjetas por numero: {}", numero);
-            return tarjetaMapper.toTarjetaResponseDto(tarjetasRepository.findAllByNumero(numero));
+            return tarjetaMapper.toTarjetaResponseDto(tarjetasRepository.findByNumero(numero));
         }
         // Si el numero está vacío, pero el titular no, buscamos por titular
         if (numero == null || numero.isEmpty()) {
             log.info("Buscando tarjetas por titular: {}", titular);
-            return tarjetaMapper.toTarjetaResponseDto(tarjetasRepository.findAllByTitular(titular));
+            return tarjetaMapper.toTarjetaResponseDto(tarjetasRepository.findByTitularContainsIgnoreCase(titular));
         }
         // Si el numero y el titular no están vacíos, buscamos por ambos
         log.info("Buscando tarjetas por numero: {} y titular: {}", numero, titular);
-        return tarjetaMapper.toTarjetaResponseDto(tarjetasRepository.findAllByNumeroAndTitular(numero, titular));
+        return tarjetaMapper.toTarjetaResponseDto(tarjetasRepository.findByNumeroAndTitularContainsIgnoreCase(numero, titular));
     }
 
     @Override
@@ -81,10 +81,8 @@ public class TarjetasServiceImpl implements TarjetasService {
     @CachePut
     public TarjetaResponseDto save(TarjetaCreateDto tarjetaCreateDto) {
         log.info("Guardando tarjeta: " + tarjetaCreateDto);
-        // obtenemos el id de tarjeta
-        Long id = tarjetasRepository.nextId();
         // Creamos la tarjeta nueva con los datos que nos vienen
-        Tarjeta nuevaTarjeta = tarjetaMapper.toTarjeta(id, tarjetaCreateDto);
+        Tarjeta nuevaTarjeta = tarjetaMapper.toTarjeta(tarjetaCreateDto);
 
         // La guardamos en el repositorio
         return tarjetaMapper.toTarjetaResponseDto(tarjetasRepository.save(nuevaTarjeta));
