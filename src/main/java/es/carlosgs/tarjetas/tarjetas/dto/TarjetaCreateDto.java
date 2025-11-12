@@ -1,6 +1,7 @@
 package es.carlosgs.tarjetas.tarjetas.dto;
 
 import es.carlosgs.tarjetas.tarjetas.validators.CreditCardNumber;
+import es.carlosgs.tarjetas.titulares.models.Titular;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -21,6 +22,6 @@ public class TarjetaCreateDto {
   @Future(message = "La fecha de caducidad debe ser posterior a la fecha actual")
   private final LocalDate fechaCaducidad;
   @NotBlank(message = "El titular no puede estar vacío")
-  private final String titular;
+  private final Titular titular;
   private final Double saldo;
 }

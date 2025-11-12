@@ -1,5 +1,6 @@
 package es.carlosgs.tarjetas.tarjetas.dto;
 
+import es.carlosgs.tarjetas.titulares.models.Titular;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +20,7 @@ public class TarjetaResponseDto {
   private String numero;
   private String cvc;
   private LocalDate fechaCaducidad;
-  private String titular;
+  private Titular titular;
   private Double saldo;
 
   private LocalDateTime createdAt;

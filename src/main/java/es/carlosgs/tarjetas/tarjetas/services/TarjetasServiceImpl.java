@@ -42,11 +42,11 @@ public class TarjetasServiceImpl implements TarjetasService {
     // Si el numero está vacío, pero el titular no, buscamos por titular
     if (numero == null || numero.isEmpty()) {
       log.info("Buscando tarjetas por titular: {}", titular);
-      return tarjetaMapper.toResponseDtoList(tarjetasRepository.findByTitularContainsIgnoreCase(titular));
+      return tarjetaMapper.toResponseDtoList(tarjetasRepository.fffindByTitularContainsIgnoreCase(titular));
     }
     // Si el numero y el titular no están vacíos, buscamos por ambos
     log.info("Buscando tarjetas por numero: {} y titular: {}", numero, titular);
-    return tarjetaMapper.toResponseDtoList(tarjetasRepository.findByNumeroAndTitularContainsIgnoreCase(numero, titular));
+    return tarjetaMapper.toResponseDtoList(tarjetasRepository.fffindByNumeroAndTitularContainsIgnoreCase(numero, titular));
   }
 
   // Cachea con el id como key

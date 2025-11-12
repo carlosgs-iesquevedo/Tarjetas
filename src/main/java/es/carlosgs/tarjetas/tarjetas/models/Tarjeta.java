@@ -1,5 +1,6 @@
 package es.carlosgs.tarjetas.tarjetas.models;
 
+import es.carlosgs.tarjetas.titulares.models.Titular;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,8 +26,10 @@ public class Tarjeta {
   private String cvc;
   @Column(nullable = false)
   private LocalDate fechaCaducidad;
-  @Column(nullable = false, length = 50)
-  private String titular;
+
+  @ManyToOne
+  @JoinColumn(name="titular_id")
+  private Titular titular;
   @Column(nullable = false)
   private Double saldo;
   @Builder.Default

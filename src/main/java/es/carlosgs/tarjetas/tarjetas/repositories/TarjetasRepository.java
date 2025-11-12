@@ -1,6 +1,7 @@
 package es.carlosgs.tarjetas.tarjetas.repositories;
 
 import es.carlosgs.tarjetas.tarjetas.models.Tarjeta;
+import es.carlosgs.tarjetas.titulares.models.Titular;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,13 +19,18 @@ public interface TarjetasRepository extends JpaRepository<Tarjeta, Long> {
   List<Tarjeta> findByNumeroAndIsDeletedFalse(String numero);
 
   // Por titular
-  List<Tarjeta> findByTitularContainsIgnoreCase(String titular);
+  @Query("select t from Tarjeta t where t.titular.nombre = :titular")
+  List<Tarjeta> fffindByTitularContainsIgnoreCase(String titular);
+  //List<Tarjeta> findByTitularContainsIgnoreCase(String titular);
+
   // Por titular y que isDeleted sea false
-  List<Tarjeta> findByTitularContainsIgnoreCaseAndIsDeletedFalse(String titular);
+  //List<Tarjeta> findByTitularContainsIgnoreCaseAndIsDeletedFalse(String titular);
 
   // Por número y titular
-  List<Tarjeta> findByNumeroAndTitularContainsIgnoreCase(String numero, String titular);
-  List<Tarjeta> findByNumeroAndTitularContainsIgnoreCaseAndIsDeletedFalse(String numero, String titular);
+  @Query("select t from Tarjeta t where t.titular.nombre = :nombre and t.numero = :numero")
+  List<Tarjeta> fffindByNumeroAndTitularContainsIgnoreCase(String numero, String titular);
+  //List<Tarjeta> findByNumeroAndTitularContainsIgnoreCase(String numero, String titular);
+  //List<Tarjeta> findByNumeroAndTitularContainsIgnoreCaseAndIsDeletedFalse(String numero, String titular);
 
   // Por UUID
   Optional<Tarjeta> findByUuid(UUID uuid);

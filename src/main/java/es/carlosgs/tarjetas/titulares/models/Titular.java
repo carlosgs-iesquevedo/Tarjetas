@@ -1,23 +1,34 @@
 package es.carlosgs.tarjetas.titulares.models;
 
-import lombok.Data;
+import es.carlosgs.tarjetas.tarjetas.models.Tarjeta;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.List;
 
-@Data
+
+@Builder
+@ToString
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor // JPA necesita un constructor vacío
+@Entity
+@Table(name = "TITULARES")
 public class Titular {
-    private final Long id;
+    @Id // Indicamos que es el ID de la tabla
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private  Long id;
 
-    private final String nombre;
-    private final String apellido;
-    private final String email;
-    private final String dni;
-    private final String telefono;
-    private final LocalDate fechaNacimiento;
+    private  String nombre;
+    private  String apellido;
+    private  String email;
+    private  String dni;
+    private  String telefono;
+    private  LocalDate fechaNacimiento;
 
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
-    private final UUID uuid;
+    @OneToMany(mappedBy = "titular")
+    private List<Tarjeta> tarjetas;
+
 }
