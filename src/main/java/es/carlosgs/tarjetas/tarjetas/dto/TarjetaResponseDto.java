@@ -1,8 +1,9 @@
 package es.carlosgs.tarjetas.tarjetas.dto;
 
-
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,16 +11,18 @@ import java.util.UUID;
 
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TarjetaResponseDto {
-    private  Long id;
+  private Long id;
 
-    private  String numero;
-    private  String cvc;
-    private  LocalDate fechaCaducidad;
-    private  String titular;
-    private  Double saldo;
+  private String numero;
+  private String cvc;
+  private LocalDate fechaCaducidad;
+  private String titular;
+  private Double saldo;
 
-    private  LocalDateTime createdAt;
-    private  LocalDateTime updatedAt;
-    private  UUID uuid;
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
+  private UUID uuid;
 }

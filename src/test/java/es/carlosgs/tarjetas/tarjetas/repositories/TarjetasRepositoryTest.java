@@ -1,13 +1,13 @@
 package es.carlosgs.tarjetas.tarjetas.repositories;
 
 import es.carlosgs.tarjetas.tarjetas.models.Tarjeta;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,262 +17,259 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Slf4j
+// Reseteamos la base de datos para partir de una situación conocida
+@Sql(value = {"/reset.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+// Vamos a probar el repositorio, pero moqueamos la base de datos JPA
 @DataJpaTest
 class TarjetasRepositoryTest {
-    private final Tarjeta tarjeta1 = Tarjeta.builder()
-            .numero("1234-5678-1234-5678")
-            .cvc("555")
-            .fechaCaducidad(LocalDate.of(2025,12,31))
-            .titular("Jose")
-            .saldo(100.0)
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
-            .uuid(UUID.fromString("57727bc2-0c1c-494e-bbaf-e952a778e478"))
-            .build();
 
-    private final Tarjeta tarjeta2 = Tarjeta.builder()
-            .numero("4321-5678-1234-5678")
-            .cvc("555")
-            .fechaCaducidad(LocalDate.of(2025,12,31))
-            .titular("Juan")
-            .saldo(100.0)
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
-            .uuid(UUID.fromString("b36835eb-e56a-4023-b058-52bfa600fee5"))
-            .build();
+  private final Tarjeta tarjeta1 = Tarjeta.builder()
+      .numero("1234-5678-1234-5678")
+      .cvc("555")
+      .fechaCaducidad(LocalDate.of(2025,12,31))
+      .titular("Jose")
+      .saldo(100.0)
+      .createdAt(LocalDateTime.now())
+      .updatedAt(LocalDateTime.now())
+      .uuid(UUID.fromString("57727bc2-0c1c-494e-bbaf-e952a778e478"))
+      .build();
 
-    @Autowired
-    private TarjetasRepository repositorio;
+  private final Tarjeta tarjeta2 = Tarjeta.builder()
+      .numero("4321-5678-1234-5678")
+      .cvc("555")
+      .fechaCaducidad(LocalDate.of(2025,12,31))
+      .titular("Juan")
+      .saldo(100.0)
+      .createdAt(LocalDateTime.now())
+      .updatedAt(LocalDateTime.now())
+      .uuid(UUID.fromString("b36835eb-e56a-4023-b058-52bfa600fee5"))
+      .build();
 
-    @Autowired
-    private TestEntityManager testEntityManager;
+  @Autowired
+  private TarjetasRepository repositorio;
+  @Autowired
+  private TestEntityManager entityManager; // EntityManager para hacer las pruebas
 
-    @BeforeEach
-    void setUp() {
-        // Comandos JPA
-        //repositorio.save(tarjeta1);
-        //repositorio.save(tarjeta2);
-        // Comandos EntityManager
-        testEntityManager.remove(tarjeta1);
-        testEntityManager.remove(tarjeta2);
-        testEntityManager.merge(tarjeta1);
-        testEntityManager.merge(tarjeta2);
-        testEntityManager.flush();
-    }
+  @BeforeEach
+  void setUp() {
+    // Vamos a salvar dos tarjetas
+    entityManager.merge(tarjeta1);
+    entityManager.merge(tarjeta2);
+    entityManager.flush();
+  }
 
-    @Test
-    void findAll() {
-        // Arrange
-        // Act
-        List<Tarjeta> tarjetas = repositorio.findAll();
-        // Assert
-        assertAll("findAll",
-                () -> assertNotNull(tarjetas),
-                () -> assertEquals(2, tarjetas.size())
-        );
+  @Test
+  void findAll() {
+    // Act
+    List<Tarjeta> tarjetas = repositorio.findAll();
 
-    }
+    // Assert
+    assertAll("findAll",
+        () -> assertNotNull(tarjetas),
+        () -> assertEquals(2, tarjetas.size())
+    );
+  }
 
-    @Test
-    void findByNumero() {
-        // Act
-        String numero = "4321-5678-1234-5678";
-        List<Tarjeta> tarjetas = repositorio.findByNumero(numero);
-        log.info("findByNumero ={}", tarjetas);
+  @Test
+  void findAllByNumero() {
+    // Act
+    String numero = "4321-5678-1234-5678";
+    List<Tarjeta> tarjetas = repositorio.findByNumero(numero);
 
-        // Assert
-        assertAll("--findByNumero--",
-                () -> assertNotNull(tarjetas),
-                () -> assertEquals(1, tarjetas.size()),
-                () -> assertEquals(numero, tarjetas.getFirst().getNumero())
-        );
-    }
+    // Assert
+    assertAll("findAllByNumero",
+        () -> assertNotNull(tarjetas),
+        () -> assertEquals(1, tarjetas.size()),
+        () -> assertEquals(numero, tarjetas.getFirst().getNumero())
+    );
+  }
 
-    @Test
-    void findAllByTitular() {
-        // Act
-        String titular = "Jose";
-        List<Tarjeta> tarjetas = repositorio.findByTitularContainsIgnoreCase(titular);
+  @Test
+  void findAllByTitular() {
+    // Act
+    String titular = "Jose";
+    List<Tarjeta> tarjetas = repositorio.findByTitularContainsIgnoreCase(titular);
 
-        // Assert
-        assertAll("findAllByTitular",
-                () -> assertNotNull(tarjetas),
-                () -> assertEquals(1, tarjetas.size()),
-                () -> assertEquals(titular, tarjetas.getFirst().getTitular())
-        );
-    }
+    // Assert
+    assertAll("findAllByNumero",
+        () -> assertNotNull(tarjetas),
+        () -> assertEquals(1, tarjetas.size()),
+        () -> assertEquals(titular, tarjetas.getFirst().getTitular())
+    );
+  }
 
-    @Test
-    void findAllByNumeroAndTitular() {
-        // Act
-        String numero = "4321-5678-1234-5678";
-        String titular = "Juan";
-        List<Tarjeta> tarjetas = repositorio.findByNumeroAndTitularContainsIgnoreCase(numero, titular);
-        // Assert
-        assertAll(
-                () -> assertNotNull(tarjetas),
-                () -> assertEquals(1, tarjetas.size()),
-                () -> assertEquals(numero, tarjetas.getFirst().getNumero()),
-                () -> assertEquals(titular, tarjetas.getFirst().getTitular())
-        );
-    }
+  @Test
+  void findAllByNumeroAndTitular() {
+    // Act
+    String numero = "4321-5678-1234-5678";
+    String titular = "Juan";
+    List<Tarjeta> tarjetas = repositorio.findByNumeroAndTitularContainsIgnoreCase(numero, titular);
+    // Assert
+    assertAll(
+        () -> assertNotNull(tarjetas),
+        () -> assertEquals(1, tarjetas.size()),
+        () -> assertEquals(numero, tarjetas.getFirst().getNumero()),
+        () -> assertEquals(titular, tarjetas.getFirst().getTitular())
+    );
+  }
 
-    @Test
-    void findById_existingId_returnsOptionalWithTarjeta() {
-        // Arrange
-        Long id = 1L;
-        // Act
-        Optional<Tarjeta> optionalTarjeta = repositorio.findById(id);
+  @Test
+  void findById_existingId_returnsOptionalWithTarjeta() {
+    // Act
+    Long id = 1L;
+    Optional<Tarjeta> optionalTarjeta = repositorio.findById(id);
 
-        // Assert
-        assertAll("findById_existingId_returnsOptionalWithTarjeta",
-                () -> assertNotNull(optionalTarjeta),
-                () -> assertTrue(optionalTarjeta.isPresent()),
-                () -> assertEquals(id, optionalTarjeta.get().getId())
-        );
-    }
+    // Assert
+    assertAll("findById_existingId_returnsOptionalWithTarjeta",
+        () -> assertNotNull(optionalTarjeta),
+        () -> assertTrue(optionalTarjeta.isPresent()),
+        () -> assertEquals(id, optionalTarjeta.get().getId())
+    );
+  }
 
-    @Test
-    void findById_nonExistingId_returnsEmptyOptional() {
-        // Act
-        Long id = 4L;
-        Optional<Tarjeta> optionalTarjeta = repositorio.findById(id);
+  @Test
+  void findById_nonExistingId_returnsEmptyOptional() {
+    // Act
+    Long id = 4L;
+    Optional<Tarjeta> optionalTarjeta = repositorio.findById(id);
 
-        // Assert
-        assertAll("findById_nonExistingId_returnsEmptyOptional",
-                () -> assertNotNull(optionalTarjeta),
-                () -> assertTrue(optionalTarjeta.isEmpty())
-        );
-    }
+    // Assert
+    assertAll("findById_nonExistingId_returnsEmptyOptional",
+        () -> assertNotNull(optionalTarjeta),
+        () -> assertTrue(optionalTarjeta.isEmpty())
+    );
+  }
 
-    @Test
-    void findByUuid_existingUuid_returnsOptionalWithTarjeta() {
-        // Act
-        UUID uuid = UUID.fromString("57727bc2-0c1c-494e-bbaf-e952a778e478");
-        Optional<Tarjeta> optionalTarjeta = repositorio.findByUuid(uuid);
-        log.info("findByUuid: {}",  optionalTarjeta.orElse(null));
+  @Test
+  void findByUuid_existingUuid_returnsOptionalWithTarjeta() {
+    // Act
+    UUID uuid = UUID.fromString("57727bc2-0c1c-494e-bbaf-e952a778e478");
+    Optional<Tarjeta> optionalTarjeta = repositorio.findByUuid(uuid);
 
-        // Assert
-        assertAll("findByUuid_existingUuid_returnsOptionalWithTarjeta",
-                () -> assertNotNull(optionalTarjeta),
-                () -> assertTrue(optionalTarjeta.isPresent()),
-                () -> assertEquals(uuid, optionalTarjeta.get().getUuid())
-        );
-    }
+    // Assert
+    assertAll("findByUuid_existingUuid_returnsOptionalWithTarjeta",
+        () -> assertNotNull(optionalTarjeta),
+        () -> assertTrue(optionalTarjeta.isPresent()),
+        () -> assertEquals(uuid, optionalTarjeta.get().getUuid())
+    );
+  }
 
-    @Test
-    void findByUuid_nonExistingUuid_returnsEmptyOptional() {
-        // Act
-        UUID uuid = UUID.fromString("12345bc2-0c1c-494e-bbaf-e952a778e478");
-        Optional<Tarjeta> optionalTarjeta = repositorio.findByUuid(uuid);
+  @Test
+  void findByUuid_nonExistingUuid_returnsEmptyOptional() {
+    // Act
+    UUID uuid = UUID.fromString("12345bc2-0c1c-494e-bbaf-e952a778e478");
+    Optional<Tarjeta> optionalTarjeta = repositorio.findByUuid(uuid);
 
-        // Assert
-        assertAll("findByUuid_nonExistingUuid_returnsEmptyOptional",
-                () -> assertNotNull(optionalTarjeta),
-                () -> assertTrue(optionalTarjeta.isEmpty())
-        );
-    }
+    // Assert
+    assertAll("findByUuid_nonExistingUuid_returnsEmptyOptional",
+        () -> assertNotNull(optionalTarjeta),
+        () -> assertTrue(optionalTarjeta.isEmpty())
+    );
+  }
 
-    @Test
-    void existsById_existingId_returnsTrue() {
-        // Act
-        Long id = 1L;
-        boolean exists = repositorio.existsById(id);
 
-        // Assert
-        assertTrue(exists);
-    }
+  @Test
+  void existsById_existingId_returnsTrue() {
+    // Act
+    Long id = 1L;
+    boolean exists = repositorio.existsById(id);
 
-    @Test
-    void existsById_nonExistingId_returnsFalse() {
-        // Act
-        Long id = 5L;
-        boolean exists = repositorio.existsById(id);
+    // Assert
+    assertTrue(exists);
+  }
 
-        // Assert
-        assertFalse(exists);
-    }
+  @Test
+  void existsById_nonExistingId_returnsFalse() {
+    // Act
+    Long id = 4L;
+    boolean exists = repositorio.existsById(id);
 
-    @Test
-    void existsByUuid_existingUuid_returnsTrue() {
-        // Act
-        UUID uuid = UUID.fromString("57727bc2-0c1c-494e-bbaf-e952a778e478");
-        boolean exists = repositorio.existsByUuid(uuid);
+    // Assert
+    assertFalse(exists);
+  }
 
-        // Assert
-        assertTrue(exists);
-    }
 
-    @Test
-    void existsByUuid_nonExistingUuid_returnsFalse() {
-        // Act
-        UUID uuid = UUID.fromString("12345bc2-0c1c-494e-bbaf-e952a778e478");
-        boolean exists = repositorio.existsByUuid(uuid);
+  @Test
+  void existsByUuid_existingUuid_returnsTrue() {
+    // Act
+    UUID uuid = UUID.fromString("57727bc2-0c1c-494e-bbaf-e952a778e478");
+    boolean exists = repositorio.existsByUuid(uuid);
 
-        // Assert
-        assertFalse(exists);
-    }
+    // Assert
+    assertTrue(exists);
+  }
 
-    @Test
-    void save_notExists() {
-        // Arrange
-        Tarjeta tarjeta = Tarjeta.builder()
-                .numero("2222-5678-1234-5678")
-                .cvc("123")
-                .fechaCaducidad(LocalDate.of(2029,12,31))
-                .titular("María")
-                .saldo(300.0)
-                .build();
+  @Test
+  void existsByUuid_nonExistingUuid_returnsFalse() {
+    // Act
+    UUID uuid = UUID.fromString("12345bc2-0c1c-494e-bbaf-e952a778e478");
+    boolean exists = repositorio.existsByUuid(uuid);
 
-        // Act
-        Tarjeta savedTarjeta = repositorio.save(tarjeta);
-        var all = repositorio.findAll();
+    // Assert
+    assertFalse(exists);
+  }
 
-        // Assert
-        assertAll("save",
-                () -> assertNotNull(savedTarjeta),
-                () -> assertEquals(tarjeta, savedTarjeta),
-                () -> assertEquals(3, all.size())
-        );
+  @Test
+  void save_notExists() {
+    // Arrange
+    Tarjeta tarjeta = Tarjeta.builder()
+        .numero("2222-5678-1234-5678")
+        .cvc("123")
+        .fechaCaducidad(LocalDate.of(2029,12,31))
+        .titular("María")
+        .saldo(300.0)
+        .build();
 
-    }
+    // Act
+    Tarjeta savedTarjeta = repositorio.save(tarjeta);
+    var all = repositorio.findAll();
 
-    @Test
-    void save_butExists() {
-        // Arrange
-        Tarjeta existingTarjeta = tarjeta1;
-        // Act & Assert
-        assertThrows(DataIntegrityViolationException.class, () -> repositorio.save(existingTarjeta));
+    // Assert
+    assertAll("save",
+        () -> assertNotNull(savedTarjeta),
+        () -> assertEquals(tarjeta, savedTarjeta),
+        () -> assertEquals(3, all.size())
+    );
 
-    }
+  }
 
-    @Test
-    void deleteById_existingId() {
-        // Act
-        Long id = 1L;
-        repositorio.deleteById(id);
-        var all = repositorio.findAll();
+  @Test
+  void save_butExists() {
+    // Arrange
+    Tarjeta tarjetaExistente = tarjeta1;
 
-        // Assert
-        assertAll("deleteById_existingId",
-                () -> assertEquals(1, all.size()),
-                () -> assertFalse(repositorio.existsById(id))
-        );
-    }
+    // Act & Assert
+    assertThrows(DataIntegrityViolationException.class, () -> repositorio.save(tarjetaExistente));
 
-    @Test
-    void deleteByUuid_existingUuid() {
-        // Act
-        UUID uuid = UUID.fromString("57727bc2-0c1c-494e-bbaf-e952a778e478");
-        repositorio.deleteByUuid(uuid);
-        var all = repositorio.findAll();
+  }
 
-        // Assert
-        assertAll("deleteByUuid_existingUuid",
-                () -> assertEquals(1, all.size()),
-                () -> assertFalse(repositorio.existsByUuid(uuid))
-        );
-    }
+  @Test
+  void deleteById_existingId() {
+    // Act
+    Long id = 1L;
+    repositorio.deleteById(id);
+    var all = repositorio.findAll();
+
+    // Assert
+    assertAll("deleteById_existingId",
+        () -> assertEquals(1, all.size()),
+        () -> assertFalse(repositorio.existsById(id))
+    );
+  }
+
+
+  @Test
+  void deleteByUuid_existingUuid() {
+    // Act
+    UUID uuid = UUID.fromString("57727bc2-0c1c-494e-bbaf-e952a778e478");
+    repositorio.deleteByUuid(uuid);
+    var all = repositorio.findAll();
+
+    // Assert
+    assertAll("deleteByUuid_existingUuid",
+        () -> assertEquals(1, all.size()),
+        () -> assertFalse(repositorio.existsByUuid(uuid))
+    );
+  }
 
 }

@@ -11,11 +11,10 @@ import java.util.UUID;
  */
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class TarjetaNotFoundException  extends TarjetaException{
-    public TarjetaNotFoundException(Long id) {
-        super("Tarjeta con id " + id + " no encontrada");
-    }
-    public TarjetaNotFoundException(UUID uuid) {
-        super("Tarjeta con uuid " + uuid + " no encontrada");
-    }
+  public TarjetaNotFoundException(Long id) {
+    super("Tarjeta con id " + id + " no encontrada");
+  }
+  public TarjetaNotFoundException(UUID uuid) {
+    super("Tarjeta con uuid " + uuid + " no encontrada");
+  }
 }
-
