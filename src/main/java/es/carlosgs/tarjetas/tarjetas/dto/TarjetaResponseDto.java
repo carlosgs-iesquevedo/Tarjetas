@@ -20,7 +20,7 @@ public class TarjetaResponseDto {
   private String numero;
   private String cvc;
   private LocalDate fechaCaducidad;
-  private Titular titular;
+  private String titular;
   private Double saldo;
 
   private LocalDateTime createdAt;

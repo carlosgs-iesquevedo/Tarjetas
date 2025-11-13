@@ -1,0 +1,30 @@
+
+
+### getAll
+GET http://localhost:3000/api/v1/titulares
+
+### gatById
+GET http://localhost:3000/api/v1/titulares/3
+
+### gatById (una que no existe)
+GET http://localhost:3000/api/v1/titulares/4
+
+### Nuevo titular
+POST http://localhost:3000/api/v1/titulares
+Content-Type: application/json
+
+{
+  "nombre": "Anas"
+}
+
+### Actualiza tarjeta
+PUT http://localhost:3000/api/v1/titulares/6
+Content-Type: application/json
+
+{
+  "nombre": "ANAs"
+}
+
+
+### Delete tarjeta
+DELETE http://localhost:3000/api/v1/titulares/6

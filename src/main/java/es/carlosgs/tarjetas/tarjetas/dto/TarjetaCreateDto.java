@@ -22,6 +22,6 @@ public class TarjetaCreateDto {
   @Future(message = "La fecha de caducidad debe ser posterior a la fecha actual")
   private final LocalDate fechaCaducidad;
   @NotBlank(message = "El titular no puede estar vacío")
-  private final Titular titular;
+  private final String titular;
   private final Double saldo;
 }

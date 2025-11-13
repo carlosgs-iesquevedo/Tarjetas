@@ -11,15 +11,14 @@ create table TARJETAS (
     saldo float(53) not null,
     is_deleted boolean default false,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
     uuid uuid not null unique
 );
 */
 -- Filas de ejemplo
-INSERT INTO TITULARES (nombre, apellido, email, dni, telefono, fecha_nacimiento)
-    VALUES ('Carlos', 'González', 'carlos@gmail.es', '12345J', '555555', '1999-12-31');
+INSERT INTO TITULARES (nombre)
+    VALUES ('Carlos'), ('Jose'), ('María');
 
 INSERT INTO TARJETAS (numero, cvc, fecha_caducidad, titular_id, saldo, uuid)
-    VALUES ('1234-5678-1234-5678', '555', '2025-12-31', 1, 100.0, UUID());
-INSERT INTO TARJETAS (numero, cvc, fecha_caducidad, titular_id, saldo, uuid)
-    VALUES ('4321-5678-1234-5678', '234', '2025-12-31', 1, 200.0, UUID());
+    VALUES ('1234-5678-1234-5678', '555', '2025-12-31', 2, 100.0, UUID()),
+         ('4321-5678-1234-5678', '234', '2025-12-31', 3, 200.0, UUID());

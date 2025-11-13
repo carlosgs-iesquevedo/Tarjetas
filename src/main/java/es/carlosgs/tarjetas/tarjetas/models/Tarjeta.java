@@ -26,10 +26,6 @@ public class Tarjeta {
   private String cvc;
   @Column(nullable = false)
   private LocalDate fechaCaducidad;
-
-  @ManyToOne
-  @JoinColumn(name="titular_id")
-  private Titular titular;
   @Column(nullable = false)
   private Double saldo;
   @Builder.Default
@@ -46,4 +42,8 @@ public class Tarjeta {
   @Column(columnDefinition = "boolean default false")
   @Builder.Default
   private Boolean isDeleted = false;
+
+  @ManyToOne
+  @JoinColumn(name="titular_id")
+  private Titular titular;
 }

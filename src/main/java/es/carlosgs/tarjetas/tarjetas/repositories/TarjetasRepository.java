@@ -5,11 +5,13 @@ import es.carlosgs.tarjetas.titulares.models.Titular;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public interface TarjetasRepository extends JpaRepository<Tarjeta, Long> {
   // Otras consultas aparte de las básicas que proporciona la interfaz JpaRepository
 
@@ -19,17 +21,15 @@ public interface TarjetasRepository extends JpaRepository<Tarjeta, Long> {
   List<Tarjeta> findByNumeroAndIsDeletedFalse(String numero);
 
   // Por titular
-  @Query("select t from Tarjeta t where t.titular.nombre = :titular")
-  List<Tarjeta> fffindByTitularContainsIgnoreCase(String titular);
-  //List<Tarjeta> findByTitularContainsIgnoreCase(String titular);
+  @Query("SELECT t FROM Tarjeta t WHERE LOWER(t.titular.nombre) LIKE %:titular%")
+  List<Tarjeta> findByTitularContainsIgnoreCase(String titular);
 
   // Por titular y que isDeleted sea false
   //List<Tarjeta> findByTitularContainsIgnoreCaseAndIsDeletedFalse(String titular);
 
   // Por número y titular
-  @Query("select t from Tarjeta t where t.titular.nombre = :nombre and t.numero = :numero")
-  List<Tarjeta> fffindByNumeroAndTitularContainsIgnoreCase(String numero, String titular);
-  //List<Tarjeta> findByNumeroAndTitularContainsIgnoreCase(String numero, String titular);
+  @Query("SELECT t FROM Tarjeta t WHERE t.numero = :numero AND LOWER(t.titular.nombre) like %:titular%")
+  List<Tarjeta> findByNumeroAndTitularContainsIgnoreCase(String numero, String titular);
   //List<Tarjeta> findByNumeroAndTitularContainsIgnoreCaseAndIsDeletedFalse(String numero, String titular);
 
   // Por UUID
